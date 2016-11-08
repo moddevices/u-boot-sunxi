@@ -1429,7 +1429,7 @@ static struct ext4_extent_header *ext4fs_get_extent_block
 	while (1) {
 		index = (struct ext4_extent_idx *)(ext_block + 1);
 
-		if (le32_to_cpu(ext_block->eh_magic) != EXT4_EXT_MAGIC)
+		if (le16_to_cpu(ext_block->eh_magic) != EXT4_EXT_MAGIC)
 			return 0;
 
 		if (ext_block->eh_depth == 0)
@@ -1437,17 +1437,17 @@ static struct ext4_extent_header *ext4fs_get_extent_block
 		i = -1;
 		do {
 			i++;
-			if (i >= le32_to_cpu(ext_block->eh_entries))
+			if (i >= le16_to_cpu(ext_block->eh_entries))
 				break;
 		} while (fileblock >= le32_to_cpu(index[i].ei_block));
 
 		if (--i < 0)
 			return 0;
 
-		block = le32_to_cpu(index[i].ei_leaf_hi);
+		block = le16_to_cpu(index[i].ei_leaf_hi);
 		block = (block << 32) + le32_to_cpu(index[i].ei_leaf_lo);
 
-		if (ext4fs_devread(block << log2_blksz, 0, blksz, buf))
+		if (ext4fs_devread((lbaint_t)block << log2_blksz, 0, blksz, buf))
 			ext_block = (struct ext4_extent_header *)buf;
 		else
 			return 0;
@@ -1538,17 +1538,17 @@ long int read_allocated_block(struct ext2_inode *inode, int fileblock)
 
 		do {
 			i++;
-			if (i >= le32_to_cpu(ext_block->eh_entries))
+			if (i >= le16_to_cpu(ext_block->eh_entries))
 				break;
 		} while (fileblock >= le32_to_cpu(extent[i].ee_block));
 		if (--i >= 0) {
 			fileblock -= le32_to_cpu(extent[i].ee_block);
-			if (fileblock >= le32_to_cpu(extent[i].ee_len)) {
+			if (fileblock >= le16_to_cpu(extent[i].ee_len)) {
 				free(buf);
 				return 0;
 			}
 
-			start = le32_to_cpu(extent[i].ee_start_hi);
+			start = le16_to_cpu(extent[i].ee_start_hi);
 			start = (start << 32) +
 					le32_to_cpu(extent[i].ee_start_lo);
 			free(buf);
@@ -1900,6 +1900,11 @@ int ext4fs_iterate_dir(struct ext2fs_node *dir, char *name,
 		if (status < 1)
 			return 0;
 
+		if (dirent.direntlen == 0) {
+			printf("Failed to iterate over directory %s\n", name);
+			return 0;
+		}
+
 		if (dirent.namelen != 0) {
 			char filename[dirent.namelen + 1];
 			struct ext2fs_node *fdiro;
@@ -2017,7 +2022,7 @@ static char *ext4fs_read_symlink(struct ext2fs_node *node)
 	if (!symlink)
 		return 0;
 
-	if (__le32_to_cpu(diro->inode.size) <= 60) {
+	if (__le32_to_cpu(diro->inode.size) < sizeof(diro->inode.b.symlink)) {
 		strncpy(symlink, diro->inode.b.symlink,
 			 __le32_to_cpu(diro->inode.size));
 	} else {
@@ -2208,7 +2213,7 @@ int ext4fs_mount(unsigned part_length)
 	if (__le16_to_cpu(data->sblock.magic) != EXT2_MAGIC)
 		goto fail;
 
-	if (__le32_to_cpu(data->sblock.revision_level == 0))
+	if (__le32_to_cpu(data->sblock.revision_level) == 0)
 		fs->inodesz = 128;
 	else
 		fs->inodesz = __le16_to_cpu(data->sblock.inode_size);
