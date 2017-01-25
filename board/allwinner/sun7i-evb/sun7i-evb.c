@@ -250,7 +250,6 @@ int board_late_init(void)
 {
 	fastboot_partition_init();
 	set_boot_type_arg();
-	check_android_misc();
 	return 0;
 }
 void dram_init_banksize(void)

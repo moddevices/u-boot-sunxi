@@ -185,8 +185,6 @@ void set_default_env(const char *s)
 		} else {
 			puts(s);
 		}
-	} else {
-		puts("Using default environment\n\n");
 	}
 
 	if (himport_r(&env_htab, (char *)default_environment,

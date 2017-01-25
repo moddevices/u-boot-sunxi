@@ -789,9 +789,6 @@ static int do_env_import(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv
 	if (argc < 1)
 		return cmd_usage(cmdtp);
 
-	if (!fmt)
-		printf("## Warning: defaulting to text format\n");
-
 	addr = (char *)simple_strtoul(argv[0], NULL, 16);
 
 	if (argc == 2) {

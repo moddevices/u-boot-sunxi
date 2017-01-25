@@ -51,8 +51,8 @@
 /*
  * Display CPU and Board information
  */
-#define CONFIG_DISPLAY_CPUINFO
-#define CONFIG_DISPLAY_BOARDINFO
+//#define CONFIG_DISPLAY_CPUINFO
+//#define CONFIG_DISPLAY_BOARDINFO
 
 /* Clock Defines */
 
@@ -154,6 +154,8 @@
 
 #define CONFIG_SYS_HZ				1000
 
+#define CONFIG_SYS_CONSOLE_INFO_QUIET	1	/* don't print console @ startup*/
+
 /* valid baudrates */
 #define CONFIG_BAUDRATE				115200
 #define CONFIG_SYS_BAUDRATE_TABLE	{ 9600, 19200, 38400, 57600, 115200 }
@@ -173,7 +175,7 @@
 #define CONFIG_SYS_NO_FLASH
 
 #define CONFIG_SYS_MONITOR_LEN		(256 << 10)	/* 256 KiB */
-#define CONFIG_IDENT_STRING			" Allwinner Technology "
+#define CONFIG_IDENT_STRING			" MOD Devices"
 
 #define CONFIG_ENV_IS_NOWHERE 1
 

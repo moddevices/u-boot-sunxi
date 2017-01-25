@@ -268,19 +268,12 @@ int NAND_PhyInit(void)
   }
   else
   {
-		 if(nand_good_block_ratio<=0)
+		 if(nand_good_block_ratio>0)
 		 	{
-		 				printk("[NAND] use nand_good_block_ratio from default parameter\n");
-		 				
-		 	}
-		 	else
-			{
-						printk("[NAND] set nand_good_block_ratio %d \n",nand_good_block_ratio);
 				  	NAND_SetValidBlkRatio(nand_good_block_ratio);
 			}
 	}	
 
-	OSAL_printf("NB1 : nand phy init ok\n");
 	return(PHY_ChangeMode(1));
 }
 
@@ -363,8 +356,6 @@ int NAND_Init(void)
 {
 	int  result;
 
-	OSAL_printf("NB1 : enter NFB_Init\n");
-
 	//while((*(volatile __u32 *)0) != 0);
 	result = NAND_PhyInit();
 	if (result < 0)
@@ -404,7 +395,6 @@ int NAND_Init(void)
     result = NAND_CacheOpen();
 #endif
 
-    OSAL_printf("NB1 : init ok\n");
     nand_init_uboot(0);
 
     return result;
