@@ -367,7 +367,19 @@ void main_loop (void)
 	}
 	else
 #endif /* CONFIG_BOOTCOUNT_LIMIT */
-		s = getenv ("bootcmd");
+
+	s = getenv ("setargs_nand");
+	if (s) {
+		run_command(s, 0);
+
+		uint32_t gpio_handler = gpio_request_ex("gpio_para", "gpio_pin_6");
+		if (gpio_read_one_pin_value(gpio_handler, "gpio_pin_6") == 0) {
+			char *setenv[4]  = {"setenv", "scriptbin", "/script-mars.bin\0", NULL};
+			do_env_set(NULL, 0, 3, setenv);
+		}
+	}
+
+	s = getenv ("bootcmd");
 
 	debug ("### main_loop: bootcmd=\"%s\"\n", s ? s : "<UNDEFINED>");
 
