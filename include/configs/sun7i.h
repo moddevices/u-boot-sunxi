@@ -198,9 +198,10 @@
 	"bootcmd=run setargs_nand boot_normal\0" \
 	"boot_normal=\
 fatload nand 0:0 0x40008000 /mainline/uImage-mainline; \
-fatload nand 0:0 0x43000000 /mainline/modduo-mainline.dtb; \
-fatload nand 0:0 0x44000000 /mainline/sunxi-spl-with-ecc_itead.bin; \
-fatload nand 0:0 0x45000000 /mainline/sunxi-spl-with-ecc_marsboard.bin; \
+fatload nand 0:0 0x43000000 /mainline/modduo-mainline_itead.dtb; \
+fatload nand 0:0 0x44000000 /mainline/modduo-mainline_marsboard-nand.dtb; \
+fatload nand 0:0 0x45000000 /mainline/sunxi-spl-with-ecc_itead.bin; \
+fatload nand 0:0 0x46000000 /mainline/sunxi-spl-with-ecc_marsboard.bin; \
 fatload nand 0:0 0x4c000000 /mainline/u-boot-dtb.bin; \
 fatload nand 0:0 0x4a000000 /mainline/u-boot-reset.bin; \
 go 0x4a000000\0" \
